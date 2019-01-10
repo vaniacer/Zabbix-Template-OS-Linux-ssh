@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.0</version>
-    <date>2019-01-10T08:33:47Z</date>
+    <date>2019-01-10T12:17:05Z</date>
     <groups>
         <group>
             <name>SSH</name>
@@ -309,7 +309,7 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>cat /proc/stat | grep procs_running | awk '{ print $2 }'</params>
+                    <params>grep procs_running /proc/stat | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -368,7 +368,7 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>free -b | grep + | awk '{ print $4 }'</params>
+                    <params>grep MemAvailable /proc/meminfo | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -385,7 +385,12 @@
                     </applications>
                     <valuemap/>
                     <logtimefmt/>
-                    <preprocessing/>
+                    <preprocessing>
+                        <step>
+                            <type>1</type>
+                            <params>1024</params>
+                        </step>
+                    </preprocessing>
                     <jmx_endpoint/>
                     <timeout>3s</timeout>
                     <url/>
@@ -427,7 +432,7 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>cat /proc/stat | grep btime | awk '{ print $2 }'</params>
+                    <params>grep btime /proc/stat | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -489,7 +494,7 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>cat /proc/stat | grep intr | awk '{ print $2 }'</params>
+                    <params>grep intr /proc/stat | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -556,7 +561,7 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>cat /proc/stat | grep ctxt | awk '{ print $2 }'</params>
+                    <params>grep ctxt /proc/stat | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -1243,7 +1248,7 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>free -b | grep wap | awk '{ print $4 }'</params>
+                    <params>grep SwapFree /proc/meminfo | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -1260,7 +1265,12 @@
                     </applications>
                     <valuemap/>
                     <logtimefmt/>
-                    <preprocessing/>
+                    <preprocessing>
+                        <step>
+                            <type>1</type>
+                            <params>1024</params>
+                        </step>
+                    </preprocessing>
                     <jmx_endpoint/>
                     <timeout>3s</timeout>
                     <url/>
@@ -1302,8 +1312,8 @@
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>total=$(free -b | grep wap | awk '{ print $2 }')&#13;
-free=$(free -b | grep wap | awk '{ print $4 }')&#13;
+                    <params>total=$(grep SwapTotal /proc/meminfo | awk '{ print $2 }')&#13;
+free=$(grep SwapFree /proc/meminfo | awk '{ print $2 }')&#13;
 python -c &quot;print 100.0/$total*$free&quot;</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
@@ -1363,7 +1373,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>free -b | grep wap | awk '{ print $2 }'</params>
+                    <params>grep SwapTotal /proc/meminfo | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -1380,7 +1390,12 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     </applications>
                     <valuemap/>
                     <logtimefmt/>
-                    <preprocessing/>
+                    <preprocessing>
+                        <step>
+                            <type>1</type>
+                            <params>1024</params>
+                        </step>
+                    </preprocessing>
                     <jmx_endpoint/>
                     <timeout>3s</timeout>
                     <url/>
@@ -1794,7 +1809,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <snmpv3_authpassphrase/>
                     <snmpv3_privprotocol>0</snmpv3_privprotocol>
                     <snmpv3_privpassphrase/>
-                    <params>free -b | grep &quot;Память\|Mem&quot; | awk '{ print $2 }'</params>
+                    <params>grep MemTotal /proc/meminfo | awk '{ print $2 }'</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -1811,7 +1826,12 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     </applications>
                     <valuemap/>
                     <logtimefmt/>
-                    <preprocessing/>
+                    <preprocessing>
+                        <step>
+                            <type>1</type>
+                            <params>1024</params>
+                        </step>
+                    </preprocessing>
                     <jmx_endpoint/>
                     <timeout>3s</timeout>
                     <url/>
@@ -2212,7 +2232,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <snmpv3_authpassphrase/>
                             <snmpv3_privprotocol>0</snmpv3_privprotocol>
                             <snmpv3_privpassphrase/>
-                            <params>expr 100 - $(df -i / | sed '1d;s|%||;s|,|.|' | awk '{ print $5 }')</params>
+                            <params>expr 100 - $(df -i {#FSNAME} | sed '1d;s|%||;s|,|.|' | awk '{ print $5 }')</params>
                             <ipmi_sensor/>
                             <authtype>1</authtype>
                             <username>{$LOGIN}</username>
