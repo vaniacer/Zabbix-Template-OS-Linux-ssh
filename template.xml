@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.0</version>
-    <date>2019-01-10T06:41:05Z</date>
+    <date>2019-01-10T08:33:47Z</date>
     <groups>
         <group>
             <name>SSH</name>
@@ -58,7 +58,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[cksum of:/etc/passwd]</key>
+                    <key>ssh.run[cksum of:/etc/passwd,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -117,7 +117,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[kernel.maxfiles]</key>
+                    <key>ssh.run[kernel.maxfiles,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -176,7 +176,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[kernel.maxproc]</key>
+                    <key>ssh.run[kernel.maxproc,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -231,70 +231,11 @@
                     <master_item/>
                 </item>
                 <item>
-                    <name>Number of running processes</name>
-                    <type>13</type>
-                    <snmp_community/>
-                    <snmp_oid/>
-                    <key>ssh.run[proc.num.run]</key>
-                    <delay>60</delay>
-                    <history>7d</history>
-                    <trends>365d</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params>cat /proc/stat | grep procs_running | awk '{ print $2 }'</params>
-                    <ipmi_sensor/>
-                    <authtype>1</authtype>
-                    <username>{$LOGIN}</username>
-                    <password/>
-                    <publickey>id_rsa.pub</publickey>
-                    <privatekey>id_rsa</privatekey>
-                    <port/>
-                    <description>Number of processes in running state.</description>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>Processes</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                    <preprocessing/>
-                    <jmx_endpoint/>
-                    <timeout>3s</timeout>
-                    <url/>
-                    <query_fields/>
-                    <posts/>
-                    <status_codes>200</status_codes>
-                    <follow_redirects>1</follow_redirects>
-                    <post_type>0</post_type>
-                    <http_proxy/>
-                    <headers/>
-                    <retrieve_mode>0</retrieve_mode>
-                    <request_method>0</request_method>
-                    <output_format>0</output_format>
-                    <allow_traps>0</allow_traps>
-                    <ssl_cert_file/>
-                    <ssl_key_file/>
-                    <ssl_key_password/>
-                    <verify_peer>0</verify_peer>
-                    <verify_host>0</verify_host>
-                    <master_item/>
-                </item>
-                <item>
                     <name>Number of processes</name>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[proc.num]</key>
+                    <key>ssh.run[proc.num,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -349,11 +290,70 @@
                     <master_item/>
                 </item>
                 <item>
+                    <name>Number of running processes</name>
+                    <type>13</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>ssh.run[proc.num.run,{HOST.CONN},{$PORT}]</key>
+                    <delay>60</delay>
+                    <history>7d</history>
+                    <trends>365d</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <params>cat /proc/stat | grep procs_running | awk '{ print $2 }'</params>
+                    <ipmi_sensor/>
+                    <authtype>1</authtype>
+                    <username>{$LOGIN}</username>
+                    <password/>
+                    <publickey>id_rsa.pub</publickey>
+                    <privatekey>id_rsa</privatekey>
+                    <port/>
+                    <description>Number of processes in running state.</description>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>Processes</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                    <preprocessing/>
+                    <jmx_endpoint/>
+                    <timeout>3s</timeout>
+                    <url/>
+                    <query_fields/>
+                    <posts/>
+                    <status_codes>200</status_codes>
+                    <follow_redirects>1</follow_redirects>
+                    <post_type>0</post_type>
+                    <http_proxy/>
+                    <headers/>
+                    <retrieve_mode>0</retrieve_mode>
+                    <request_method>0</request_method>
+                    <output_format>0</output_format>
+                    <allow_traps>0</allow_traps>
+                    <ssl_cert_file/>
+                    <ssl_key_file/>
+                    <ssl_key_password/>
+                    <verify_peer>0</verify_peer>
+                    <verify_host>0</verify_host>
+                    <master_item/>
+                </item>
+                <item>
                     <name>Memory available</name>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[sshkey.mem_available]</key>
+                    <key>ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -412,7 +412,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.boottime]</key>
+                    <key>ssh.run[system.boottime,{HOST.CONN},{$PORT}]</key>
                     <delay>600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -474,7 +474,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.intr]</key>
+                    <key>ssh.run[system.cpu.intr,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -541,7 +541,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.switches]</key>
+                    <key>ssh.run[system.cpu.switches,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -608,7 +608,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.idle]</key>
+                    <key>ssh.run[system.cpu.util.idle,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -670,7 +670,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.interrupt]</key>
+                    <key>ssh.run[system.cpu.util.interrupt,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -732,7 +732,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.iowait]</key>
+                    <key>ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -794,7 +794,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.nice]</key>
+                    <key>ssh.run[system.cpu.util.nice,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -856,7 +856,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.softirq]</key>
+                    <key>ssh.run[system.cpu.util.softirq,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -918,7 +918,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.steal]</key>
+                    <key>ssh.run[system.cpu.util.steal,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -980,7 +980,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.system]</key>
+                    <key>ssh.run[system.cpu.util.system,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1042,7 +1042,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.cpu.util.user]</key>
+                    <key>ssh.run[system.cpu.util.user,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1104,7 +1104,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.hostname]</key>
+                    <key>ssh.run[system.hostname,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>0</trends>
@@ -1166,7 +1166,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.localtime]</key>
+                    <key>ssh.run[system.localtime,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>0</trends>
@@ -1228,7 +1228,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.swap.size.free]</key>
+                    <key>ssh.run[system.swap.size.free,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1287,7 +1287,7 @@
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.swap.size.pfree]</key>
+                    <key>ssh.run[system.swap.size.pfree,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1348,7 +1348,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.swap.size.total]</key>
+                    <key>ssh.run[system.swap.size.total,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1407,7 +1407,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.uname]</key>
+                    <key>ssh.run[system.uname,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>0</trends>
@@ -1469,7 +1469,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.uptime]</key>
+                    <key>ssh.run[system.uptime,{HOST.CONN},{$PORT}]</key>
                     <delay>600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1531,7 +1531,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system.users.num]</key>
+                    <key>ssh.run[system.users.num,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1593,7 +1593,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system_cpu_load_percpu_avg1]</key>
+                    <key>ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1655,7 +1655,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system_cpu_load_percpu_avg5]</key>
+                    <key>ssh.run[system_cpu_load_percpu_avg5,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1717,7 +1717,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[system_cpu_load_percpu_avg15]</key>
+                    <key>ssh.run[system_cpu_load_percpu_avg15,{HOST.CONN},{$PORT}]</key>
                     <delay>60</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1779,7 +1779,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[vm.memory.size.total]</key>
+                    <key>ssh.run[vm.memory.size.total,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <history>7d</history>
                     <trends>365d</trends>
@@ -1840,7 +1840,7 @@ python -c &quot;print 100.0/$total*$free&quot;</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[net.if.discovery]</key>
+                    <key>ssh.run[net.if.discovery,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
@@ -1884,7 +1884,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[Network {#IFNAME} incoming traffic]</key>
+                            <key>ssh.run[Network {#IFNAME} incoming traffic,{HOST.CONN},{$PORT}]</key>
                             <delay>60</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -1954,7 +1954,7 @@ echo ${data[1]}</params>
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[Network {#IFNAME} outgoing traffic]</key>
+                            <key>ssh.run[Network {#IFNAME} outgoing traffic,{HOST.CONN},{$PORT}]</key>
                             <delay>60</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -2049,7 +2049,7 @@ echo ${data[9]}</params>
                                     <type>0</type>
                                     <item>
                                         <host>Template OS Linux SSH</host>
-                                        <key>ssh.run[Network {#IFNAME} incoming traffic]</key>
+                                        <key>ssh.run[Network {#IFNAME} incoming traffic,{HOST.CONN},{$PORT}]</key>
                                     </item>
                                 </graph_item>
                                 <graph_item>
@@ -2061,7 +2061,7 @@ echo ${data[9]}</params>
                                     <type>0</type>
                                     <item>
                                         <host>Template OS Linux SSH</host>
-                                        <key>ssh.run[Network {#IFNAME} outgoing traffic]</key>
+                                        <key>ssh.run[Network {#IFNAME} outgoing traffic,{HOST.CONN},{$PORT}]</key>
                                     </item>
                                 </graph_item>
                             </graph_items>
@@ -2092,7 +2092,7 @@ echo ${data[9]}</params>
                     <type>13</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>ssh.run[vfs.fs.discovery]</key>
+                    <key>ssh.run[vfs.fs.discovery,{HOST.CONN},{$PORT}]</key>
                     <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
@@ -2137,7 +2137,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[{#FSNAME} free space]</key>
+                            <key>ssh.run[{#FSNAME} free space,{HOST.CONN},{$PORT}]</key>
                             <delay>60</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -2197,7 +2197,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[{#FSNAME} percent of free inodes]</key>
+                            <key>ssh.run[{#FSNAME} percent of free inodes,{HOST.CONN},{$PORT}]</key>
                             <delay>60</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -2257,7 +2257,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[{#FSNAME} percent of free space]</key>
+                            <key>ssh.run[{#FSNAME} percent of free space,{HOST.CONN},{$PORT}]</key>
                             <delay>60</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -2317,7 +2317,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[{#FSNAME} total space]</key>
+                            <key>ssh.run[{#FSNAME} total space,{HOST.CONN},{$PORT}]</key>
                             <delay>3600</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -2377,7 +2377,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <type>13</type>
                             <snmp_community/>
                             <snmp_oid/>
-                            <key>ssh.run[{#FSNAME} used space]</key>
+                            <key>ssh.run[{#FSNAME} used space,{HOST.CONN},{$PORT}]</key>
                             <delay>60</delay>
                             <history>7d</history>
                             <trends>365d</trends>
@@ -2435,7 +2435,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template OS Linux SSH:ssh.run[{#FSNAME} percent of free space].last(0)}&lt;20</expression>
+                            <expression>{Template OS Linux SSH:ssh.run[{#FSNAME} percent of free space,{HOST.CONN},{$PORT}].last(0)}&lt;20</expression>
                             <recovery_mode>0</recovery_mode>
                             <recovery_expression/>
                             <name>Free disk space is less than 20% on volume {#FSNAME}</name>
@@ -2451,7 +2451,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template OS Linux SSH:ssh.run[{#FSNAME} percent of free inodes].last(0)}&lt;20</expression>
+                            <expression>{Template OS Linux SSH:ssh.run[{#FSNAME} percent of free inodes,{HOST.CONN},{$PORT}].last(0)}&lt;20</expression>
                             <recovery_mode>0</recovery_mode>
                             <recovery_expression/>
                             <name>Free inodes is less than 20% on volume {#FSNAME}</name>
@@ -2495,7 +2495,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                                     <type>2</type>
                                     <item>
                                         <host>Template OS Linux SSH</host>
-                                        <key>ssh.run[{#FSNAME} total space]</key>
+                                        <key>ssh.run[{#FSNAME} total space,{HOST.CONN},{$PORT}]</key>
                                     </item>
                                 </graph_item>
                                 <graph_item>
@@ -2507,7 +2507,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                                     <type>0</type>
                                     <item>
                                         <host>Template OS Linux SSH</host>
-                                        <key>ssh.run[{#FSNAME} free space]</key>
+                                        <key>ssh.run[{#FSNAME} free space,{HOST.CONN},{$PORT}]</key>
                                     </item>
                                 </graph_item>
                             </graph_items>
@@ -2539,6 +2539,10 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                 <macro>
                     <macro>{$LOGIN}</macro>
                     <value>jboss</value>
+                </macro>
+                <macro>
+                    <macro>{$PORT}</macro>
+                    <value>22</value>
                 </macro>
             </macros>
             <templates>
@@ -2656,7 +2660,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <dynamic>0</dynamic>
                             <sort_triggers>0</sort_triggers>
                             <resource>
-                                <key>ssh.run[proc.num]</key>
+                                <key>ssh.run[proc.num,{HOST.CONN},{$PORT}]</key>
                                 <host>Template OS Linux SSH</host>
                             </resource>
                             <max_columns>3</max_columns>
@@ -2678,7 +2682,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                             <dynamic>0</dynamic>
                             <sort_triggers>0</sort_triggers>
                             <resource>
-                                <key>ssh.run[proc.num.run]</key>
+                                <key>ssh.run[proc.num.run,{HOST.CONN},{$PORT}]</key>
                                 <host>Template OS Linux SSH</host>
                             </resource>
                             <max_columns>3</max_columns>
@@ -2691,7 +2695,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
     </templates>
     <triggers>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[cksum of:/etc/passwd].diff(0)}&gt;0</expression>
+            <expression>{Template OS Linux SSH:ssh.run[cksum of:/etc/passwd,{HOST.CONN},{$PORT}].diff(0)}&gt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>/etc/passwd has been changed on {HOST.NAME}</name>
@@ -2707,7 +2711,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[kernel.maxfiles].last(0)}&lt;1024</expression>
+            <expression>{Template OS Linux SSH:ssh.run[kernel.maxfiles,{HOST.CONN},{$PORT}].last(0)}&lt;1024</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Configured max number of opened files is too low on {HOST.NAME}</name>
@@ -2723,7 +2727,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[kernel.maxproc].last(0)}&lt;256</expression>
+            <expression>{Template OS Linux SSH:ssh.run[kernel.maxproc,{HOST.CONN},{$PORT}].last(0)}&lt;256</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Configured max number of processes is too low on {HOST.NAME}</name>
@@ -2739,7 +2743,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[system.cpu.util.iowait].avg(5m)}&gt;20</expression>
+            <expression>{Template OS Linux SSH:ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}].avg(5m)}&gt;20</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Disk I/O is overloaded on {HOST.NAME}</name>
@@ -2755,7 +2759,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[system.uname].diff(0)}&gt;0</expression>
+            <expression>{Template OS Linux SSH:ssh.run[system.uname,{HOST.CONN},{$PORT}].diff(0)}&gt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Host information was changed on {HOST.NAME}</name>
@@ -2771,7 +2775,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[system.hostname].diff(0)}&gt;0</expression>
+            <expression>{Template OS Linux SSH:ssh.run[system.hostname,{HOST.CONN},{$PORT}].diff(0)}&gt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Hostname was changed on {HOST.NAME}</name>
@@ -2787,7 +2791,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[sshkey.mem_available].last(0)}&lt;20M</expression>
+            <expression>{Template OS Linux SSH:ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}].last(0)}&lt;20M</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Lack of available memory on server {HOST.NAME}</name>
@@ -2803,7 +2807,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[system.swap.size.pfree].last(0)}&lt;50</expression>
+            <expression>{Template OS Linux SSH:ssh.run[system.swap.size.pfree,{HOST.CONN},{$PORT}].last(0)}&lt;50</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Lack of free swap space on {HOST.NAME}</name>
@@ -2819,7 +2823,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[system_cpu_load_percpu_avg1].avg(5m)}&gt;5</expression>
+            <expression>{Template OS Linux SSH:ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}].avg(5m)}&gt;5</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Processor load is too high on {HOST.NAME}</name>
@@ -2835,7 +2839,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[proc.num].avg(5m)}&gt;300</expression>
+            <expression>{Template OS Linux SSH:ssh.run[proc.num,{HOST.CONN},{$PORT}].avg(5m)}&gt;300</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Too many processes on {HOST.NAME}</name>
@@ -2851,7 +2855,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[proc.num.run].avg(5m)}&gt;30</expression>
+            <expression>{Template OS Linux SSH:ssh.run[proc.num.run,{HOST.CONN},{$PORT}].avg(5m)}&gt;30</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>Too many processes running on {HOST.NAME}</name>
@@ -2867,7 +2871,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <tags/>
         </trigger>
         <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[system.uptime].change(0)}&lt;0</expression>
+            <expression>{Template OS Linux SSH:ssh.run[system.uptime,{HOST.CONN},{$PORT}].change(0)}&lt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
             <name>{HOST.NAME} has just been restarted</name>
@@ -2911,7 +2915,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.switches]</key>
+                        <key>ssh.run[system.cpu.switches,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -2923,7 +2927,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.intr]</key>
+                        <key>ssh.run[system.cpu.intr,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
             </graph_items>
@@ -2955,7 +2959,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system_cpu_load_percpu_avg1]</key>
+                        <key>ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -2967,7 +2971,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system_cpu_load_percpu_avg5]</key>
+                        <key>ssh.run[system_cpu_load_percpu_avg5,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -2979,7 +2983,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system_cpu_load_percpu_avg15]</key>
+                        <key>ssh.run[system_cpu_load_percpu_avg15,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
             </graph_items>
@@ -3011,7 +3015,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.steal]</key>
+                        <key>ssh.run[system.cpu.util.steal,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3023,7 +3027,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.softirq]</key>
+                        <key>ssh.run[system.cpu.util.softirq,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3035,7 +3039,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.interrupt]</key>
+                        <key>ssh.run[system.cpu.util.interrupt,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3047,7 +3051,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.nice]</key>
+                        <key>ssh.run[system.cpu.util.nice,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3059,7 +3063,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.iowait]</key>
+                        <key>ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3071,7 +3075,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.system]</key>
+                        <key>ssh.run[system.cpu.util.system,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3083,7 +3087,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.user]</key>
+                        <key>ssh.run[system.cpu.util.user,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3095,7 +3099,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.cpu.util.idle]</key>
+                        <key>ssh.run[system.cpu.util.idle,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
             </graph_items>
@@ -3118,7 +3122,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <ymin_item_1>0</ymin_item_1>
             <ymax_item_1>
                 <host>Template OS Linux SSH</host>
-                <key>ssh.run[vm.memory.size.total]</key>
+                <key>ssh.run[vm.memory.size.total,{HOST.CONN},{$PORT}]</key>
             </ymax_item_1>
             <graph_items>
                 <graph_item>
@@ -3130,7 +3134,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[sshkey.mem_available]</key>
+                        <key>ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
             </graph_items>
@@ -3162,7 +3166,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>2</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.swap.size.total]</key>
+                        <key>ssh.run[system.swap.size.total,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
                 <graph_item>
@@ -3174,7 +3178,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <type>0</type>
                     <item>
                         <host>Template OS Linux SSH</host>
-                        <key>ssh.run[system.swap.size.free]</key>
+                        <key>ssh.run[system.swap.size.free,{HOST.CONN},{$PORT}]</key>
                     </item>
                 </graph_item>
             </graph_items>
