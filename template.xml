@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.0</version>
-    <date>2019-01-09T14:00:15Z</date>
+    <date>2019-01-10T06:41:05Z</date>
     <groups>
         <group>
             <name>SSH</name>
@@ -1856,7 +1856,7 @@ data=$(&#13;
     for NET in &quot;${NETS[@]}&quot;; { printf &quot;\n\t{ \&quot;{#IFNAME}\&quot;:\&quot;$NET\&quot;\t},&quot;; }&#13;
     printf '_LAST_COMMA_'&#13;
 )&#13;
-printf &quot;{\n\t&quot;data&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quot;</params>
+printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quot;</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
@@ -2109,7 +2109,7 @@ data=$(&#13;
         fs=($FS); printf &quot;\n\t{ \&quot;{#FSNAME}\&quot;:\&quot;${fs[-1]}\&quot;,\t\t\&quot;{#FSTYPE}\&quot;:\&quot;${fs[1]}\&quot;\t},&quot;&#13;
     }; printf '_LAST_COMMA_'&#13;
 )&#13;
-printf &quot;{\n\t&quot;data&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quot;</params>
+printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quot;</params>
                     <ipmi_sensor/>
                     <authtype>1</authtype>
                     <username>{$LOGIN}</username>
