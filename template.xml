@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.0</version>
-    <date>2019-01-10T12:17:05Z</date>
+    <date>2019-11-08T13:50:33Z</date>
     <groups>
         <group>
             <name>SSH</name>
@@ -51,8 +51,70 @@
                 <application>
                     <name>Security</name>
                 </application>
+                <application>
+                    <name>SSH</name>
+                </application>
             </applications>
             <items>
+                <item>
+                    <name>SSH service</name>
+                    <type>3</type>
+                    <snmp_community/>
+                    <snmp_oid/>
+                    <key>net.tcp.service[ssh,{HOST.CONN},{$PORT}]</key>
+                    <delay>60s</delay>
+                    <history>7d</history>
+                    <trends>365d</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units/>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>SSH</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                    <preprocessing/>
+                    <jmx_endpoint/>
+                    <timeout>3s</timeout>
+                    <url/>
+                    <query_fields/>
+                    <posts/>
+                    <status_codes>200</status_codes>
+                    <follow_redirects>1</follow_redirects>
+                    <post_type>0</post_type>
+                    <http_proxy/>
+                    <headers/>
+                    <retrieve_mode>0</retrieve_mode>
+                    <request_method>0</request_method>
+                    <output_format>0</output_format>
+                    <allow_traps>0</allow_traps>
+                    <ssl_cert_file/>
+                    <ssl_key_file/>
+                    <ssl_key_password/>
+                    <verify_peer>0</verify_peer>
+                    <verify_host>0</verify_host>
+                    <master_item/>
+                </item>
                 <item>
                     <name>Security $1</name>
                     <type>13</type>
@@ -2565,11 +2627,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
                     <value>22</value>
                 </macro>
             </macros>
-            <templates>
-                <template>
-                    <name>Template App SSH Service</name>
-                </template>
-            </templates>
+            <templates/>
             <screens>
                 <screen>
                     <name>System performance</name>
@@ -2718,7 +2776,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[cksum of:/etc/passwd,{HOST.CONN},{$PORT}].diff(0)}&gt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>/etc/passwd has been changed on {HOST.NAME}</name>
+            <name>/etc/passwd has been changed</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2734,7 +2792,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[kernel.maxfiles,{HOST.CONN},{$PORT}].last(0)}&lt;1024</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Configured max number of opened files is too low on {HOST.NAME}</name>
+            <name>Configured max number of opened files is too low</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2750,7 +2808,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[kernel.maxproc,{HOST.CONN},{$PORT}].last(0)}&lt;256</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Configured max number of processes is too low on {HOST.NAME}</name>
+            <name>Configured max number of processes is too low</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2766,7 +2824,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}].avg(5m)}&gt;20</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Disk I/O is overloaded on {HOST.NAME}</name>
+            <name>Disk I/O is overloaded</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2782,7 +2840,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[system.uname,{HOST.CONN},{$PORT}].diff(0)}&gt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Host information was changed on {HOST.NAME}</name>
+            <name>Host information was changed</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2798,7 +2856,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[system.hostname,{HOST.CONN},{$PORT}].diff(0)}&gt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Hostname was changed on {HOST.NAME}</name>
+            <name>Hostname was changed</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2814,7 +2872,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}].last(0)}&lt;20M</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Lack of available memory on server {HOST.NAME}</name>
+            <name>Lack of available memory</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2830,7 +2888,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[system.swap.size.pfree,{HOST.CONN},{$PORT}].last(0)}&lt;50</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Lack of free swap space on {HOST.NAME}</name>
+            <name>Lack of free swap space</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2846,39 +2904,7 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}].avg(5m)}&gt;5</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>Processor load is too high on {HOST.NAME}</name>
-            <correlation_mode>0</correlation_mode>
-            <correlation_tag/>
-            <url/>
-            <status>0</status>
-            <priority>2</priority>
-            <description/>
-            <type>0</type>
-            <manual_close>0</manual_close>
-            <dependencies/>
-            <tags/>
-        </trigger>
-        <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[proc.num,{HOST.CONN},{$PORT}].avg(5m)}&gt;300</expression>
-            <recovery_mode>0</recovery_mode>
-            <recovery_expression/>
-            <name>Too many processes on {HOST.NAME}</name>
-            <correlation_mode>0</correlation_mode>
-            <correlation_tag/>
-            <url/>
-            <status>0</status>
-            <priority>2</priority>
-            <description/>
-            <type>0</type>
-            <manual_close>0</manual_close>
-            <dependencies/>
-            <tags/>
-        </trigger>
-        <trigger>
-            <expression>{Template OS Linux SSH:ssh.run[proc.num.run,{HOST.CONN},{$PORT}].avg(5m)}&gt;30</expression>
-            <recovery_mode>0</recovery_mode>
-            <recovery_expression/>
-            <name>Too many processes running on {HOST.NAME}</name>
+            <name>Processor load is too high</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
@@ -2894,12 +2920,60 @@ printf &quot;{\n\t\&quot;data\&quot;:[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n&quo
             <expression>{Template OS Linux SSH:ssh.run[system.uptime,{HOST.CONN},{$PORT}].change(0)}&lt;0</expression>
             <recovery_mode>0</recovery_mode>
             <recovery_expression/>
-            <name>{HOST.NAME} has just been restarted</name>
+            <name>Restart happened</name>
             <correlation_mode>0</correlation_mode>
             <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>1</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template OS Linux SSH:net.tcp.service[ssh,{HOST.CONN},{$PORT}].count(#5,0)} = 5</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>SSH not responding</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>4</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template OS Linux SSH:ssh.run[proc.num,{HOST.CONN},{$PORT}].avg(5m)}&gt;300</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Too many processes</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description/>
+            <type>0</type>
+            <manual_close>0</manual_close>
+            <dependencies/>
+            <tags/>
+        </trigger>
+        <trigger>
+            <expression>{Template OS Linux SSH:ssh.run[proc.num.run,{HOST.CONN},{$PORT}].avg(5m)}&gt;30</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
+            <name>Too many processes running</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
             <description/>
             <type>0</type>
             <manual_close>0</manual_close>
