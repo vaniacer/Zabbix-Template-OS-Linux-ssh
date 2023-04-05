@@ -4,3 +4,9 @@ Zabbix template based on default template <i>'Template OS Linux'</i> but all ite
 Required Zabbix 4.0+
 
 More about zabbix SSH checks <a href="https://www.zabbix.com/documentation/4.0/manual/config/items/itemtypes/ssh_checks">here</a>
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/Vaniacer?style=social)](https://twitter.com/Vaniacer)
+[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/sshto?locale.x=en_US) <sup>Don't hold yourself, buy me a beer)</sup>
+
+~~Twitter~~ DOGE: D7qJBRU3UpXES9EwtvE8YZSNAVgFEmz3py</br>
+![dodge](https://user-images.githubusercontent.com/18072680/229992296-f415eadb-645b-4229-81c7-e269485c635d.png)
