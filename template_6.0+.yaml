@@ -1,0 +1,1221 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-04-18T10:05:42Z'
+  groups:
+    -
+      uuid: 765553e6c7ac45928389acb9878a050a
+      name: SSH
+    -
+      uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    -
+      uuid: 0a7c3d5e19414c49b8defc97df74dbb2
+      template: 'Template OS Linux SSH'
+      name: 'Template OS Linux SSH'
+      groups:
+        -
+          name: SSH
+        -
+          name: Templates
+      items:
+        -
+          uuid: b9db2ed0a4344c8982d80f2fb4f948a3
+          name: 'SSH service'
+          type: SIMPLE
+          key: 'net.tcp.service[ssh,{HOST.CONN},{$PORT}]'
+          delay: 60s
+          history: 7d
+          tags:
+            -
+              tag: Application
+              value: SSH
+          triggers:
+            -
+              uuid: c69fcfed445140eaa811e8d5f5b47bdf
+              expression: 'count(/Template OS Linux SSH/net.tcp.service[ssh,{HOST.CONN},{$PORT}],#5,,"0") = 5'
+              name: 'SSH not responding'
+              priority: HIGH
+        -
+          uuid: b9db491ff2574e82b97a4bf41944fc4e
+          name: 'Security $1'
+          type: SSH
+          key: 'ssh.run[cksum of:/etc/passwd,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          params: 'cksum /etc/passwd | awk ''{ print $1 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          tags:
+            -
+              tag: Application
+              value: Security
+          triggers:
+            -
+              uuid: d9a19365b92f40569a524aaa750e6387
+              expression: '(last(/Template OS Linux SSH/ssh.run[cksum of:/etc/passwd,{HOST.CONN},{$PORT}],#1)<>last(/Template OS Linux SSH/ssh.run[cksum of:/etc/passwd,{HOST.CONN},{$PORT}],#2))>0'
+              name: '/etc/passwd has been changed'
+              priority: WARNING
+        -
+          uuid: 1f0995e642454a169b775ad0823b0940
+          name: 'Maximum number of opened files'
+          type: SSH
+          key: 'ssh.run[kernel.maxfiles,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          params: 'cat /proc/sys/fs/file-max'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.'
+          tags:
+            -
+              tag: Application
+              value: OS
+          triggers:
+            -
+              uuid: d4987c404e4d45dfb2383471249270a5
+              expression: 'last(/Template OS Linux SSH/ssh.run[kernel.maxfiles,{HOST.CONN},{$PORT}])<1024'
+              name: 'Configured max number of opened files is too low'
+              priority: INFO
+        -
+          uuid: 8600b20d62624cdc9e3d37ac6da5b78a
+          name: 'Maximum number of processes'
+          type: SSH
+          key: 'ssh.run[kernel.maxproc,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          params: 'cat /proc/sys/kernel/pid_max'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'It could be increased by using sysctrl utility or modifying file /etc/sysctl.conf.'
+          tags:
+            -
+              tag: Application
+              value: OS
+          triggers:
+            -
+              uuid: 480900683f874a598239b01502039cac
+              expression: 'last(/Template OS Linux SSH/ssh.run[kernel.maxproc,{HOST.CONN},{$PORT}])<256'
+              name: 'Configured max number of processes is too low'
+              priority: INFO
+        -
+          uuid: 889ab40108c743b588b8526d28299415
+          name: 'Number of processes'
+          type: SSH
+          key: 'ssh.run[proc.num,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          params: 'ps ax | wc -l'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'Total number of processes in any state.'
+          tags:
+            -
+              tag: Application
+              value: Processes
+          triggers:
+            -
+              uuid: e12b133b3b9d4460b16faf82c50081a3
+              expression: 'avg(/Template OS Linux SSH/ssh.run[proc.num,{HOST.CONN},{$PORT}],5m)>300'
+              name: 'Too many processes'
+              priority: WARNING
+        -
+          uuid: be42fa6327e84e44b34cee27a9a63b41
+          name: 'Number of running processes'
+          type: SSH
+          key: 'ssh.run[proc.num.run,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          params: 'grep procs_running /proc/stat | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'Number of processes in running state.'
+          tags:
+            -
+              tag: Application
+              value: Processes
+          triggers:
+            -
+              uuid: 8fa3a06954d34d28a18f8a45642e7579
+              expression: 'avg(/Template OS Linux SSH/ssh.run[proc.num.run,{HOST.CONN},{$PORT}],5m)>30'
+              name: 'Too many processes running'
+              priority: WARNING
+        -
+          uuid: 62d6dac34b294f12a97df3a7432d34fc
+          name: 'Memory available'
+          type: SSH
+          key: 'ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          units: B
+          params: 'grep MemAvailable /proc/meminfo | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'Available memory is defined as free+cached+buffers memory.'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+          tags:
+            -
+              tag: Application
+              value: Memory
+          triggers:
+            -
+              uuid: ab5fd24875784bfda28619d9ca0ca37a
+              expression: 'last(/Template OS Linux SSH/ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}])<20M'
+              name: 'Lack of available memory'
+              priority: AVERAGE
+        -
+          uuid: 9318df4fc193400fb138610d97372b78
+          name: 'System boot time'
+          type: SSH
+          key: 'ssh.run[system.boottime,{HOST.CONN},{$PORT}]'
+          delay: '600'
+          history: 7d
+          units: unixtime
+          params: 'grep btime /proc/stat | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          tags:
+            -
+              tag: Application
+              value: General
+            -
+              tag: Application
+              value: OS
+        -
+          uuid: 97ab6cc4a3bb453b87bb9d882c62fe3d
+          name: 'CPU interrupts per second'
+          type: SSH
+          key: 'ssh.run[system.cpu.intr,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: ips
+          params: 'grep intr /proc/stat | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 8cd89c7db9e24174acdb8d3cacdf1516
+          name: 'CPU context switches per second'
+          type: SSH
+          key: 'ssh.run[system.cpu.switches,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          units: sps
+          params: 'grep ctxt /proc/stat | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 7361f6d9ef9b48b7aca139a6bf78cf5b
+          name: 'CPU idle time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.idle,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{print $NF}'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The time the CPU has spent doing nothing.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 2f7f491a53fa4a7189a3d7a123ffecfd
+          name: 'CPU irq time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.interrupt,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $7 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The amount of time the CPU has been servicing hardware interrupts.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 34419b1edb16425d86e8cd8dff2cbe63
+          name: 'CPU iowait time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $6 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'Amount of time the CPU has been waiting for I/O to complete.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+          triggers:
+            -
+              uuid: 3e1b20c3131349c3a93b750a5f1243aa
+              expression: 'avg(/Template OS Linux SSH/ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}],5m)>20'
+              name: 'Disk I/O is overloaded'
+              priority: WARNING
+              description: 'OS spends significant time waiting for I/O (input/output) operations. It could be indicator of performance issues with storage system.'
+        -
+          uuid: 6a7ae1d94c434d30b409ded698d8df04
+          name: 'CPU nice time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.nice,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $4 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The time the CPU has spent running users'' processes that have been niced.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 7d4a342e64374a50be762ed633069761
+          name: 'CPU softirq time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.softirq,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $8 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The amount of time the CPU has been servicing software interrupts.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 81ed28152b8e4d7080b9fce0053925da
+          name: 'CPU steal time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.steal,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $9 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The amount of CPU ''stolen'' from this virtual machine by the hypervisor for other tasks (such as running another virtual machine).'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: a6ceeb9765494e458c5511a045db9ed4
+          name: 'CPU system time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.system,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $5 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The time the CPU has spent running the kernel and its processes.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: fb9ab08591ba4b029932d0386a01d595
+          name: 'CPU user time'
+          type: SSH
+          key: 'ssh.run[system.cpu.util.user,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: 'mpstat | grep all | awk ''{ print $3 }'' | sed "s|,|.|g"'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The time the CPU has spent running users'' processes that are not niced.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 54cd258b4ad34d2193070e650e95e9eb
+          name: 'System hostname'
+          type: SSH
+          key: 'ssh.run[system.hostname,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          params: hostname
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'System host name.'
+          inventory_link: NAME
+          tags:
+            -
+              tag: Application
+              value: General
+            -
+              tag: Application
+              value: OS
+          triggers:
+            -
+              uuid: a53eb4455ab84a3c95ae3d344eb85af8
+              expression: '(last(/Template OS Linux SSH/ssh.run[system.hostname,{HOST.CONN},{$PORT}],#1)<>last(/Template OS Linux SSH/ssh.run[system.hostname,{HOST.CONN},{$PORT}],#2))>0'
+              name: 'Hostname was changed'
+              priority: INFO
+        -
+          uuid: c5feceffa6be424d9014ac30534b4f04
+          name: 'System local time'
+          type: SSH
+          key: 'ssh.run[system.localtime,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          params: 'date +''%Y-%m-%d %H:%M:%S'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          tags:
+            -
+              tag: Application
+              value: General
+            -
+              tag: Application
+              value: OS
+        -
+          uuid: 1e22786cb3e44f2ab4bdad0a6222983e
+          name: 'Memory swap space free'
+          type: SSH
+          key: 'ssh.run[system.swap.size.free,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          units: B
+          params: 'grep SwapFree /proc/meminfo | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+          tags:
+            -
+              tag: Application
+              value: Memory
+        -
+          uuid: 6b6fa901f9b34e95bea367ea525e9917
+          name: 'Memory swap space free in %'
+          type: SSH
+          key: 'ssh.run[system.swap.size.pfree,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          params: |
+            total=$(grep SwapTotal /proc/meminfo | awk '{ print $2 }')
+            free=$(grep SwapFree /proc/meminfo | awk '{ print $2 }')
+            python -c "print 100.0/$total*$free"
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          tags:
+            -
+              tag: Application
+              value: Memory
+          triggers:
+            -
+              uuid: 3b146e64690e45e9b43b0c29aa18a96b
+              expression: 'last(/Template OS Linux SSH/ssh.run[system.swap.size.pfree,{HOST.CONN},{$PORT}])<50'
+              name: 'Lack of free swap space'
+              priority: WARNING
+              description: 'It probably means that the systems requires more physical memory.'
+        -
+          uuid: 4bd1bcb368354f03858757b3af466788
+          name: 'Memory swap space total'
+          type: SSH
+          key: 'ssh.run[system.swap.size.total,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          units: B
+          params: 'grep SwapTotal /proc/meminfo | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+          tags:
+            -
+              tag: Application
+              value: Memory
+        -
+          uuid: 8a69705936504e90a52a60e0483e64f8
+          name: 'System information'
+          type: SSH
+          key: 'ssh.run[system.uname,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          params: 'uname -a'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The information as normally returned by ''uname -a''.'
+          inventory_link: OS
+          tags:
+            -
+              tag: Application
+              value: General
+            -
+              tag: Application
+              value: OS
+          triggers:
+            -
+              uuid: 5021824f575d4233b0e258bfa1cc295b
+              expression: '(last(/Template OS Linux SSH/ssh.run[system.uname,{HOST.CONN},{$PORT}],#1)<>last(/Template OS Linux SSH/ssh.run[system.uname,{HOST.CONN},{$PORT}],#2))>0'
+              name: 'Host information was changed'
+              priority: INFO
+        -
+          uuid: 49f7abc2d54944c4b104582ed8b80411
+          name: 'System uptime'
+          type: SSH
+          key: 'ssh.run[system.uptime,{HOST.CONN},{$PORT}]'
+          delay: '600'
+          history: 7d
+          units: uptime
+          params: 'cat /proc/uptime | awk -F. ''{ print $1 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          tags:
+            -
+              tag: Application
+              value: General
+            -
+              tag: Application
+              value: OS
+          triggers:
+            -
+              uuid: cc1ca64c28d048e89c822d64de833755
+              expression: 'change(/Template OS Linux SSH/ssh.run[system.uptime,{HOST.CONN},{$PORT}])<0'
+              name: 'Restart happened'
+              priority: INFO
+        -
+          uuid: 79ab1921a04b4c20a91f0135dc7d6878
+          name: 'Number of logged in users'
+          type: SSH
+          key: 'ssh.run[system.users.num,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          params: 'who | wc -l'
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'Number of users who are currently logged in.'
+          tags:
+            -
+              tag: Application
+              value: OS
+            -
+              tag: Application
+              value: Security
+        -
+          uuid: b5e45cca918145d0806aa218d40d00f9
+          name: 'CPU load (1 min average per core)'
+          type: SSH
+          key: 'ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          params: 'cat /proc/loadavg | awk ''{ print $1 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The processor load is calculated as system CPU load divided by number of CPU cores.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+          triggers:
+            -
+              uuid: 09c7e3d50f2b44d694b8351018136a15
+              expression: 'avg(/Template OS Linux SSH/ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}],5m)>5'
+              name: 'Processor load is too high'
+              priority: WARNING
+        -
+          uuid: c30e7527f8a141e79fb6889ca0b2b90c
+          name: 'CPU load (5 min average per core)'
+          type: SSH
+          key: 'ssh.run[system_cpu_load_percpu_avg5,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          params: 'cat /proc/loadavg | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The processor load is calculated as system CPU load divided by number of CPU cores.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: a15e93b4593c484689f3c2612bf5628c
+          name: 'CPU load (15 min average per core)'
+          type: SSH
+          key: 'ssh.run[system_cpu_load_percpu_avg15,{HOST.CONN},{$PORT}]'
+          delay: '60'
+          history: 7d
+          value_type: FLOAT
+          params: 'cat /proc/loadavg | awk ''{ print $3 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          description: 'The processor load is calculated as system CPU load divided by number of CPU cores.'
+          tags:
+            -
+              tag: Application
+              value: CPU
+            -
+              tag: Application
+              value: Performance
+        -
+          uuid: 930f61858e644909b649e9233ed958e5
+          name: 'Memory total'
+          type: SSH
+          key: 'ssh.run[vm.memory.size.total,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          history: 7d
+          units: B
+          params: 'grep MemTotal /proc/meminfo | awk ''{ print $2 }'''
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+          tags:
+            -
+              tag: Application
+              value: Memory
+      discovery_rules:
+        -
+          uuid: fb671f36be764a70b6822f5b96ac7496
+          name: 'Network interface discovery'
+          type: SSH
+          key: 'ssh.run[net.if.discovery,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          params: |
+            NETS=($(grep : /proc/net/dev | grep -v lo: | sed 's|:.*$||g'))
+            data=$(
+                for NET in "${NETS[@]}"; { printf "\n\t{ \"{#IFNAME}\":\"$NET\"\t},"; }
+                printf '_LAST_COMMA_'
+            )
+            printf "{\n\t\"data\":[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n"
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          filter:
+            conditions:
+              -
+                macro: '{#IFNAME}'
+                value: '@Network interfaces for discovery'
+                formulaid: A
+          description: 'Discovery of network interfaces as defined in global regular expression "Network interfaces for discovery".'
+          item_prototypes:
+            -
+              uuid: 252e959d42884b508531e4a95db41392
+              name: $1
+              type: SSH
+              key: 'ssh.run[Network {#IFNAME} incoming traffic,{HOST.CONN},{$PORT}]'
+              delay: '60'
+              history: 7d
+              units: bps
+              params: |
+                data=($(grep {#IFNAME} /proc/net/dev))
+                echo ${data[1]}
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                -
+                  tag: Application
+                  value: 'Network interfaces'
+            -
+              uuid: 2a599c743ccd4817985569f2a1e0269a
+              name: $1
+              type: SSH
+              key: 'ssh.run[Network {#IFNAME} outgoing traffic,{HOST.CONN},{$PORT}]'
+              delay: '60'
+              history: 7d
+              units: bps
+              params: |
+                data=($(grep {#IFNAME} /proc/net/dev))
+                echo ${data[9]}
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                -
+                  tag: Application
+                  value: 'Network interfaces'
+          graph_prototypes:
+            -
+              uuid: 575d67cb13744bce854ad71fca8e6f7e
+              name: 'Network traffic on {#IFNAME}'
+              ymin_type_1: FIXED
+              graph_items:
+                -
+                  drawtype: GRADIENT_LINE
+                  color: 00AA00
+                  item:
+                    host: 'Template OS Linux SSH'
+                    key: 'ssh.run[Network {#IFNAME} incoming traffic,{HOST.CONN},{$PORT}]'
+                -
+                  sortorder: '1'
+                  drawtype: GRADIENT_LINE
+                  color: 3333FF
+                  item:
+                    host: 'Template OS Linux SSH'
+                    key: 'ssh.run[Network {#IFNAME} outgoing traffic,{HOST.CONN},{$PORT}]'
+        -
+          uuid: 8b09ef356ca849f5ac5167fc07fe42aa
+          name: 'Mounted filesystem discovery'
+          type: SSH
+          key: 'ssh.run[vfs.fs.discovery,{HOST.CONN},{$PORT}]'
+          delay: '3600'
+          params: |
+            IFSOLD=$IFS; IFS=$'\n'; FSS=($(df -Tl -xtmpfs -xdevtmpfs)); IFS=$IFSOLD
+            data=$(
+                for FS in "${FSS[@]:1}"; {
+                    fs=($FS); printf "\n\t{ \"{#FSNAME}\":\"${fs[-1]}\",\t\t\"{#FSTYPE}\":\"${fs[1]}\"\t},"
+                }; printf '_LAST_COMMA_'
+            )
+            printf "{\n\t\"data\":[\n${data//,_LAST_COMMA_/\\n}\n\t]\n}\n"
+          authtype: PUBLIC_KEY
+          username: '{$LOGIN}'
+          publickey: id_rsa.pub
+          privatekey: id_rsa
+          filter:
+            conditions:
+              -
+                macro: '{#FSTYPE}'
+                value: '@File systems for discovery'
+                formulaid: A
+          description: 'Discovery of file systems of different types as defined in global regular expression "File systems for discovery".'
+          item_prototypes:
+            -
+              uuid: 85032a5557674c1da0780ae27daf07c4
+              name: 'Disk $1'
+              type: SSH
+              key: 'ssh.run[{#FSNAME} free space,{HOST.CONN},{$PORT}]'
+              delay: '60'
+              history: 7d
+              units: B
+              params: 'df --block-size=1 {#FSNAME} | grep {#FSNAME} | awk ''{ print $4 }'''
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              tags:
+                -
+                  tag: Application
+                  value: Filesystems
+            -
+              uuid: c6a13aa7c7334564baaa16df37a1f7f6
+              name: 'Disk $1'
+              type: SSH
+              key: 'ssh.run[{#FSNAME} percent of free inodes,{HOST.CONN},{$PORT}]'
+              delay: '60'
+              history: 7d
+              value_type: FLOAT
+              units: '%'
+              params: 'expr 100 - $(df -i {#FSNAME} | sed ''1d;s|%||;s|,|.|'' | awk ''{ print $5 }'')'
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              tags:
+                -
+                  tag: Application
+                  value: Filesystems
+              trigger_prototypes:
+                -
+                  uuid: d8459459b10a44b3984e91a7effbdf40
+                  expression: 'last(/Template OS Linux SSH/ssh.run[{#FSNAME} percent of free inodes,{HOST.CONN},{$PORT}])<20'
+                  name: 'Free inodes is less than 20% on volume {#FSNAME}'
+                  priority: WARNING
+            -
+              uuid: 20e67dc349fd41cfa340e90927f51bec
+              name: 'Disk $1'
+              type: SSH
+              key: 'ssh.run[{#FSNAME} percent of free space,{HOST.CONN},{$PORT}]'
+              delay: '60'
+              history: 7d
+              value_type: FLOAT
+              units: '%'
+              params: 'expr 100 - $(df {#FSNAME} | grep {#FSNAME} | awk ''{ print $5 }'' | sed ''s|%||'')'
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              tags:
+                -
+                  tag: Application
+                  value: Filesystems
+              trigger_prototypes:
+                -
+                  uuid: 362f305d223748c3b7782bdb908df64b
+                  expression: 'last(/Template OS Linux SSH/ssh.run[{#FSNAME} percent of free space,{HOST.CONN},{$PORT}])<20'
+                  name: 'Free disk space is less than 20% on volume {#FSNAME}'
+                  priority: WARNING
+            -
+              uuid: fb09c2dd703a40198a9874beaf53dc31
+              name: 'Disk $1'
+              type: SSH
+              key: 'ssh.run[{#FSNAME} total space,{HOST.CONN},{$PORT}]'
+              delay: '3600'
+              history: 7d
+              units: B
+              params: 'df --block-size=1 {#FSNAME} | grep {#FSNAME} | awk ''{ print $2 }'''
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              tags:
+                -
+                  tag: Application
+                  value: Filesystems
+            -
+              uuid: db7cc7d38e104dbd85ae9f4fe10b0a0b
+              name: 'Disk $1'
+              type: SSH
+              key: 'ssh.run[{#FSNAME} used space,{HOST.CONN},{$PORT}]'
+              delay: '60'
+              history: 7d
+              units: B
+              params: 'df --block-size=1 {#FSNAME} | grep {#FSNAME} | awk ''{ print $3 }'''
+              authtype: PUBLIC_KEY
+              username: '{$LOGIN}'
+              publickey: id_rsa.pub
+              privatekey: id_rsa
+              tags:
+                -
+                  tag: Application
+                  value: Filesystems
+          graph_prototypes:
+            -
+              uuid: 9a2fd8e953d441aaac74df64ae4a1eb6
+              name: 'Disk space usage {#FSNAME}'
+              width: '600'
+              height: '340'
+              show_work_period: 'NO'
+              show_triggers: 'NO'
+              type: PIE
+              show_3d: 'YES'
+              graph_items:
+                -
+                  color: C80000
+                  type: GRAPH_SUM
+                  item:
+                    host: 'Template OS Linux SSH'
+                    key: 'ssh.run[{#FSNAME} total space,{HOST.CONN},{$PORT}]'
+                -
+                  sortorder: '1'
+                  color: 00C800
+                  item:
+                    host: 'Template OS Linux SSH'
+                    key: 'ssh.run[{#FSNAME} free space,{HOST.CONN},{$PORT}]'
+      macros:
+        -
+          macro: '{$LOGIN}'
+          value: jboss
+        -
+          macro: '{$PORT}'
+          value: '22'
+      dashboards:
+        -
+          uuid: 0386a00332a04eb4a7ec72343672814f
+          name: 'System performance'
+          pages:
+            -
+              widgets:
+                -
+                  type: GRAPH_CLASSIC
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Template OS Linux SSH'
+                        name: 'CPU load'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '12'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Template OS Linux SSH'
+                        name: 'CPU utilization'
+                -
+                  type: GRAPH_CLASSIC
+                  'y': '5'
+                  width: '12'
+                  height: '7'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Template OS Linux SSH'
+                        name: 'Memory usage'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '12'
+                  'y': '5'
+                  width: '12'
+                  height: '7'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Template OS Linux SSH'
+                        name: 'Swap usage'
+                -
+                  type: GRAPH_CLASSIC
+                  'y': '12'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '1'
+                    -
+                      type: ITEM
+                      name: itemid
+                      value:
+                        host: 'Template OS Linux SSH'
+                        key: 'ssh.run[proc.num,{HOST.CONN},{$PORT}]'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '12'
+                  'y': '12'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '1'
+                    -
+                      type: ITEM
+                      name: itemid
+                      value:
+                        host: 'Template OS Linux SSH'
+                        key: 'ssh.run[proc.num.run,{HOST.CONN},{$PORT}]'
+  graphs:
+    -
+      uuid: 38aecebf604e4ae1bb3113e4e3111885
+      name: 'CPU jumps'
+      graph_items:
+        -
+          color: '009900'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.switches,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '1'
+          color: '000099'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.intr,{HOST.CONN},{$PORT}]'
+    -
+      uuid: 5fbd063d0a244b638ec6961b9c367739
+      name: 'CPU load'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: '009900'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system_cpu_load_percpu_avg1,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '1'
+          color: '000099'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system_cpu_load_percpu_avg5,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '2'
+          color: '990000'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system_cpu_load_percpu_avg15,{HOST.CONN},{$PORT}]'
+    -
+      uuid: cc232e096e984e33a8cdc3985468c898
+      name: 'CPU utilization'
+      show_triggers: 'NO'
+      type: STACKED
+      ymin_type_1: FIXED
+      ymax_type_1: FIXED
+      graph_items:
+        -
+          drawtype: FILLED_REGION
+          color: FF5555
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.steal,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '1'
+          drawtype: FILLED_REGION
+          color: 55FF55
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.softirq,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '2'
+          drawtype: FILLED_REGION
+          color: '009999'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.interrupt,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '3'
+          drawtype: FILLED_REGION
+          color: '990099'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.nice,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '4'
+          drawtype: FILLED_REGION
+          color: '999900'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.iowait,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '5'
+          drawtype: FILLED_REGION
+          color: '990000'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.system,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '6'
+          drawtype: FILLED_REGION
+          color: '000099'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.user,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '7'
+          drawtype: FILLED_REGION
+          color: '009900'
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.cpu.util.idle,{HOST.CONN},{$PORT}]'
+    -
+      uuid: c2f5d5d4db944072a03e61b295811c54
+      name: 'Memory usage'
+      ymin_type_1: FIXED
+      ymax_type_1: ITEM
+      ymax_item_1:
+        host: 'Template OS Linux SSH'
+        key: 'ssh.run[vm.memory.size.total,{HOST.CONN},{$PORT}]'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 00C800
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[sshkey.mem_available,{HOST.CONN},{$PORT}]'
+    -
+      uuid: 48b9eb030ae04912b635922eb3635a0e
+      name: 'Swap usage'
+      width: '600'
+      height: '340'
+      show_work_period: 'NO'
+      show_triggers: 'NO'
+      type: PIE
+      show_3d: 'YES'
+      graph_items:
+        -
+          color: AA0000
+          type: GRAPH_SUM
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.swap.size.total,{HOST.CONN},{$PORT}]'
+        -
+          sortorder: '1'
+          color: 00AA00
+          item:
+            host: 'Template OS Linux SSH'
+            key: 'ssh.run[system.swap.size.free,{HOST.CONN},{$PORT}]'
